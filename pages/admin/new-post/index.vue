@@ -1,29 +1,30 @@
 <template>
   <div class="admin-new-post-page">
     <section class="new-post-form">
-      <AdminPostForm @submit="onSubimetted"/>
+      <AdminPostForm @submit="onSubimetted" />
     </section>
   </div>
 </template>
 
 <script>
 import AdminPostForm from "@/components/Admin/AdminPostForm";
-import axios from 'axios'
 
 export default {
-  layout: 'admin',
+  layout: "admin",
   components: {
     AdminPostForm
   },
   methods: {
-    onSubimetted(postData) {
-      axios.post('https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts.json', postData)
-      .then(result => {
-        console.log(result)
-      })
-      .catch(error => {
-        console.log(error)
-      })
+    async onSubimetted(postData) {
+      try {
+        const newPost = await this.$axios
+        .$post("https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts.json", {
+          ...postData,
+          updatedDate: new Date()
+        })
+      } catch (error) {
+        this.$error(error)
+      }
     }
   }
 };
@@ -41,4 +42,3 @@ export default {
   }
 }
 </style>
-
