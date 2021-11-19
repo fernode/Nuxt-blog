@@ -18,9 +18,6 @@ export default {
     loadedPosts() {
       return this.$store.getters.loadedPosts
     }
-  },
-  created() {
-    console.log(this.loadedPosts)
   }
   // data() {
   //   return {

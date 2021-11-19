@@ -50,9 +50,6 @@ const createStore = () => {
         //     resolve();
         //   }, 1000);
         // });
-      },
-      setPosts(vuexContext, posts) {
-        vuexContext.commit("setPosts", posts);
       }
     },
     getters: {

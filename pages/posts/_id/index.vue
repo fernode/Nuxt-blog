@@ -3,32 +3,42 @@
     <section class="post">
       <h1 class="post-title">{{ loadedPost.title }}</h1>
       <div class="post-details">
-        <div class="post-detail">Last updated on {{ loadedPost.updatedDate }}</div>
+        <div class="post-detail">
+          Last updated on {{ loadedPost.updatedDate }}
+        </div>
         <div class="post-detail">Written by {{ loadedPost.author }}</div>
       </div>
       <p class="post-content">{{ loadedPost.content }}</p>
     </section>
     <section class="post-feedback">
-      <p>Let me know what you think about the post, send a mail to <a href="mailto:feedback@my-awesome-domain.com">feedback@my-awesome-domain.com</a>.</p>
+      <p>
+        Let me know what you think about the post, send a mail to
+        <a href="mailto:feedback@my-awesome-domain.com"
+          >feedback@my-awesome-domain.com</a
+        >.
+      </p>
     </section>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 export default {
-  asyncData(context) {
-    return axios.get('https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts/'+ context.params.id + '.json')
-    .then(res => {
+  async asyncData({ error, $axios, params }) {
+    try {
+      const postData = await $axios.$get(
+        "https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts/" +
+          params.id +
+          ".json"
+      );
       return {
-        loadedPost: res.data
-      }
-    })
-    .catch(err => context.error(err))
+        loadedPost: postData
+      };
+    } catch (err) {
+      return error(err)
+    }
   }
 };
 </script>
-
 
 <style scoped>
 .single-post-page {
