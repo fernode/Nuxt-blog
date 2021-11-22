@@ -25,22 +25,16 @@ export default {
         loadedPost: postData
       };
     } catch (err) {
-      return error(err);
+      return error;
     }
   },
   methods: {
-    async onSubmitted(editedPost) {
-      try {
-        await this.$axios.put(
-          "https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts/" +
-            this.$route.params.postId +
-            ".json",
-          editedPost
-        );
-        this.$router.push("/admin");
-      } catch (error) {
-        this.$eror(error);
-      }
+    onSubmitted(editedPost) {
+      this.$store
+        .dispatch("editPost", { ...editedPost, id: this.$route.params.postId })
+        .then(() => {
+          this.$router.push("/admin")
+        });
     }
   }
 };

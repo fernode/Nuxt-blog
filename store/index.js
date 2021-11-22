@@ -8,6 +8,19 @@ const createStore = () => {
     mutations: {
       setPosts(state, posts) {
         state.loadedPosts = posts;
+      },
+      addPost(state, post) {
+        state.loadedPosts.push(post);
+      },
+      editPost(state, editedPost) {
+        const postIndex = state.loadedPosts.findIndex(
+          post => post.id === editedPost.id
+        );
+        if (postIndex >= 0) {
+          state.loadedPosts[postIndex] = editedPost;
+        } else {
+          return null;
+        }
       }
     },
     actions: {
@@ -52,6 +65,42 @@ const createStore = () => {
           vuexContext.commit("setPosts", postsArray);
         } catch (error) {
           context.error(error);
+        }
+      },
+      addPost(vuexContext, post) {
+        const createdPost = {
+          ...post,
+          updatedDate: new Date()
+        };
+        return this.$axios
+          .$post(
+            "https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts.json",
+            createdPost
+          )
+          .then(result => {
+            vuexContext.commit("addPost", { ...createdPost, id: result.name });
+          })
+          .catch(error => error);
+      },
+      editPost(vuexContext, editedPost) {
+        const { id } = editedPost;
+        const validPost = vuexContext.getters.loadedPost(id);
+
+        if (validPost) {
+          return this.$axios
+            .put(
+              "https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts/" +
+                validPost.id +
+                ".json",
+              editedPost
+            )
+            .then(result => {
+              if (result.status >= 300) {
+                throw new Error
+              }
+              vuexContext.commit("editPost", result.data);
+            })
+            .catch(err => error);
         }
       }
     },

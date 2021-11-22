@@ -15,16 +15,10 @@ export default {
     AdminPostForm
   },
   methods: {
-    async onSubimetted(postData) {
-      try {
-        await this.$axios
-        .$post("https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts.json", {
-          ...postData,
-          updatedDate: new Date()
-        })
-      } catch (error) {
-        this.$error(error)
-      }
+    onSubimetted(postData) {
+      this.$store
+        .dispatch("addPost", postData)
+        .then(() => this.$router.push("/admin"));
     }
   }
 };
