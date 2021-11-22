@@ -14,11 +14,20 @@ export default {
   components: {
     AdminPostForm
   },
-  computed: {
-    loadedPost() {
-      return this.$store.getters.loadedPost(this.$route.params.postId);
+  async asyncData({ error, $axios, params }) {
+    try {
+      const postData = await $axios.$get(
+        "https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts/" +
+          params.postId +
+          ".json"
+      );
+      return {
+        loadedPost: postData
+      };
+    } catch (err) {
+      return error(err);
     }
-  },
+  }
 };
 </script>
 
