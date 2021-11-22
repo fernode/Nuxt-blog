@@ -28,6 +28,7 @@ module.exports = {
   ** Global CSS
   */
   css: [
+    '~assets/styles/main.css'
   ],
 
   /*
@@ -53,5 +54,9 @@ module.exports = {
     extend(config, ctx) {
 
     }
+  },
+  transition: {
+    name: 'fade',
+    mode: 'out-in'
   }
 }
