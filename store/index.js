@@ -12,22 +12,7 @@ const createStore = () => {
     },
     actions: {
       async nuxtServerInit(vuexContext, context) {
-        try {
-          const postData = await this.$axios.$get(
-            "https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts.json"
-          );
-          const postsArray = [];
-
-          for (const key in postData) {
-            if (postData.hasOwnProperty(key)) {
-              postsArray.push({ ...postData[key], id: key });
-            }
-          }
-
-          vuexContext.commit("setPosts", postsArray);
-        } catch (error) {
-          context.error(error);
-        }
+        await vuexContext.dispatch("fetchAllPosts");
 
         // return new Promise((resolve, reject) => {
         //   setTimeout(() => {
@@ -50,11 +35,32 @@ const createStore = () => {
         //     resolve();
         //   }, 1000);
         // });
+      },
+      async fetchAllPosts(vuexContext) {
+        try {
+          const postData = await this.$axios.$get(
+            "https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts.json"
+          );
+          const postsArray = [];
+
+          for (const key in postData) {
+            if (postData.hasOwnProperty(key)) {
+              postsArray.push({ ...postData[key], id: key });
+            }
+          }
+
+          vuexContext.commit("setPosts", postsArray);
+        } catch (error) {
+          context.error(error);
+        }
       }
     },
     getters: {
       loadedPosts(state) {
         return state.loadedPosts;
+      },
+      loadedPost: state => id => {
+        return state.loadedPosts.find(post => post.id === id);
       }
     }
   });

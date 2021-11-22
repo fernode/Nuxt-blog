@@ -17,7 +17,7 @@ export default {
   methods: {
     async onSubimetted(postData) {
       try {
-        const newPost = await this.$axios
+        await this.$axios
         .$post("https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts.json", {
           ...postData,
           updatedDate: new Date()
