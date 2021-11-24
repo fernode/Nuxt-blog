@@ -78,7 +78,7 @@ const createStore = () => {
         };
         return this.$axios
           .$post(
-            "https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts.json",
+            `https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts.json?auth=${vuexContext.state.token}`,
             createdPost
           )
           .then(result => {
@@ -93,9 +93,8 @@ const createStore = () => {
         if (validPost) {
           return this.$axios
             .put(
-              "https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts/" +
-                validPost.id +
-                ".json",
+              `https://nuxt-app-ebdeb-default-rtdb.firebaseio.com/posts/
+                ${validPost.id}.json?auth=${vuexContext.state.token}`,
               editedPost
             )
             .then(result => {
@@ -104,7 +103,7 @@ const createStore = () => {
               }
               vuexContext.commit("editPost", result.data);
             })
-            .catch(err => error);
+            .catch(err => err);
         }
       },
       async authenticateUser(vuexContext, authUser) {
