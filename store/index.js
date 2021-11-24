@@ -3,7 +3,8 @@ import Vuex from "vuex";
 const createStore = () => {
   return new Vuex.Store({
     state: {
-      loadedPosts: []
+      loadedPosts: [],
+      token: null
     },
     mutations: {
       setPosts(state, posts) {
@@ -21,6 +22,9 @@ const createStore = () => {
         } else {
           return null;
         }
+      },
+      setToken(state, token) {
+        state.token = token;
       }
     },
     actions: {
@@ -96,12 +100,32 @@ const createStore = () => {
             )
             .then(result => {
               if (result.status >= 300) {
-                throw new Error
+                throw new Error();
               }
               vuexContext.commit("editPost", result.data);
             })
             .catch(err => error);
         }
+      },
+      async authenticateUser(vuexContext, authUser) {
+        let authURL =
+          "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=" +
+          process.env.fbAPIKey;
+
+        if (!authUser.login) {
+          authURL =
+            "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=" +
+            process.env.fbAPIKey;
+        }
+
+        return await this.$axios
+          .$post(authURL, {
+            email: authUser.email,
+            password: authUser.password,
+            returnSecureToken: true
+          })
+          .then(result => vuexContext.commit('setToken', result.idToken))
+          .catch(error => console.log(error));
       }
     },
     getters: {
