@@ -133,6 +133,9 @@ const createStore = () => {
       },
       loadedPost: state => id => {
         return state.loadedPosts.find(post => post.id === id);
+      },
+      isAuthenticated(state) {
+        return state.token != null;
       }
     }
   });

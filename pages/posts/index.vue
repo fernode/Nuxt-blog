@@ -8,6 +8,7 @@
 import PostList from "@/components/Posts/PostList";
 
 export default {
+  middleware: 'auth',
   components: {
     PostList
   },

@@ -23,6 +23,7 @@
 
 <script>
 export default {
+  middleware: 'auth',
   async asyncData({ error, $axios, params }) {
     try {
       const postData = await $axios.$get(

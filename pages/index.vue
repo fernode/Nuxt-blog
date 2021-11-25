@@ -11,6 +11,7 @@
 import PostList from "@/components/Posts/PostList";
 
 export default {
+  midleware: ["auth"],
   components: {
     PostList
   },
